@@ -20,11 +20,13 @@ module.exports = {
           900: '#14532d',
         },
         sacco: {
-          green: '#1a7f3c',
-          gold:  '#f5a623',
+          green: '#2d6a1e',
+          dark: '#1a4d12',
+          light: '#4a8f2f',
         },
       },
     },
   },
   plugins: [],
 };
+

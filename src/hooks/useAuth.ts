@@ -1,37 +1,60 @@
 /**
  * hooks/useAuth.ts
- * Convenience hook — exposes auth state and actions.
- * Uses Redux store (authSlice) as the source of truth for user/loading/error.
+ * Auth hook — login is mocked while backend is not ready.
  *
- * Usage:
- *   const { user, isAuth, loading, error, login, logout } = useAuth();
+ * TODO: Reconnect login page when backend auth is ready.
+ *   1. Remove MOCK_USER and isAuthenticated = true
+ *   2. Uncomment the real loginUser dispatch
+ *   3. Change logout redirect back to '/auth/login'
  */
 import { useAppDispatch, useAppSelector } from './redux';
-import { loginUser, logoutUser, clearError } from '@/store/slices/authSlice';
-import { useRouter } from 'next/navigation';
+import { logoutUser, setUser, clearError } from '@/store/slices/authSlice';
+import { useRouter } from 'next/navigation';import Cookies from 'js-cookie';
+// TEMP: mock authenticated user — remove when real auth is wired
+// TODO: Reconnect login page when backend auth is ready
+const MOCK_USER = {
+  id:          'mock-001',
+  fullName:    'Admin User',
+  email:       'admin@saccoplus.rw',
+  role:        'ADMIN',
+  accountType: 'INDIVIDUAL',
+};
 
 export function useAuth() {
   const dispatch = useAppDispatch();
   const router   = useRouter();
   const { user, isAuth, loading, error } = useAppSelector((s) => s.auth);
 
-  // TODO [BACKEND]: login dispatches loginUser thunk → POST /auth/login
-  const login = async (email: string, password: string) => {
-    const result = await dispatch(loginUser({ email, password }));
-    if (loginUser.fulfilled.match(result)) {
-      router.push('/dashboard/member');
-    }
+  /**
+   * login — MOCKED while backend is not ready.
+   * TODO: Reconnect login page when backend auth is ready.
+   * Replace mock block below with:
+   *   const result = await dispatch(loginUser({ email, password }));
+   *   if (loginUser.fulfilled.match(result)) router.push('/dashboard/admin');
+   */
+  const login = async (_email: string, _password: string) => {
+    // TEMP: inject mock user directly into Redux store
+    dispatch(setUser(MOCK_USER));
+    Cookies.set('userRole', MOCK_USER.role, { expires: 1, secure: true, sameSite: 'strict' });
+    router.push(MOCK_USER.role === 'ADMIN' ? '/dashboard/admin' : '/user');
   };
 
-  // TODO [BACKEND]: logout dispatches logoutUser thunk → clears cookies
+  /**
+   * logout — clears store and redirects to dashboard (not login) while login is disabled.
+   * TODO: Reconnect login page when backend is ready.
+   * Change redirect to: router.push('/auth/login')
+   */
   const logout = async () => {
     await dispatch(logoutUser());
-    router.push('/auth/login');
+    Cookies.remove('userRole');
+    // TEMP: redirect to root so App Router chooses the correct next route
+    router.push('/');
   };
 
   return {
     user,
-    isAuth,
+    // TEMP: always treat as authenticated — TODO: remove when real auth is wired
+    isAuth: true,
     loading,
     error,
     login,

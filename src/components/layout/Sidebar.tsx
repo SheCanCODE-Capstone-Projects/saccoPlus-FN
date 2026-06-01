@@ -57,10 +57,10 @@ export function Sidebar() {
         fixed inset-y-0 left-0 z-50 bg-primary-900 text-white flex flex-col
         transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:translate-x-0 md:relative md:inset-auto
+        md:translate-x-0 md:relative md:inset-auto md:h-full
         ${sidebarOpen ? 'md:w-64' : 'md:w-16'}
       `}
-      style={{ width: '256px' }}
+      style={{ width: '256px', minHeight: '100vh' }}
     >
       {/* Logo */}
       <div className="flex items-center h-16 px-4 border-b border-primary-700 shrink-0">

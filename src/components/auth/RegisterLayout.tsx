@@ -16,8 +16,7 @@ interface Props {
 
 export default function RegisterLayout({ steps, children }: Props) {
   return (
-    // h-screen + overflow-hidden on root: prevents the page itself from scrolling
-    <div className="h-screen overflow-hidden flex flex-col" style={{ backgroundColor: '#EEF2E8' }}>
+    <div className="flex min-h-screen flex-col overflow-hidden" style={{ backgroundColor: '#EEF2E8' }}>
 
       {/* Mobile-only progress bar — sits above the 3-column row */}
       <div className="md:hidden shrink-0 bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-3">
@@ -43,7 +42,7 @@ export default function RegisterLayout({ steps, children }: Props) {
       </div>
 
       {/* 3-column row — fills remaining height, no overflow of its own */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
 
         {/* Sidebar — sticky, never scrolls */}
         <div className="hidden md:flex flex-col w-[260px] lg:w-[280px] shrink-0 h-full overflow-hidden">
@@ -51,7 +50,7 @@ export default function RegisterLayout({ steps, children }: Props) {
         </div>
 
         {/* Main content — THE ONLY scrollable area */}
-        <main className="flex-1 h-full overflow-y-auto flex flex-col items-center justify-start px-4 md:px-6">
+        <main className="flex min-h-0 flex-1 flex-col items-center justify-start overflow-y-auto px-4 md:px-6">
           {children}
 
           {/* Footer lives inside the scroll area so it appears after content */}

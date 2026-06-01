@@ -12,7 +12,7 @@ export function DashboardLayout({ title, children }: Props) {
   const sidebarOpen = useAppSelector((s) => s.ui.sidebarOpen);
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden items-stretch">
       {/* Mobile overlay backdrop */}
       {sidebarOpen && (
         <div

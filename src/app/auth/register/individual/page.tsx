@@ -7,15 +7,15 @@ import { z } from 'zod';
 import Link from 'next/link';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-import { Eye, EyeOff, User, CreditCard, Phone, Lock } from 'lucide-react';
+import { Eye, EyeOff, Mail, User, CreditCard, Phone, Lock } from 'lucide-react';
 import RegisterLayout from '@/components/auth/RegisterLayout';
-// TODO [BACKEND]: swap mock for real API call via authService.registerIndividual()
-import { authService } from '@/services/api';
+import { mockRegister, delay } from '@/lib/mockData';
 
 const schema = z.object({
   fullName:   z.string().min(2, 'Full name is required'),
+  email:      z.string().email('Enter a valid email address'),
   nationalId: z.string().min(16, 'Enter a valid National ID').max(16, 'Must be 16 characters'),
-  phone:      z.string().regex(/^\+?250[0-9]{9}$/, 'Enter a valid Rwandan phone number (+250...)'),
+  phoneNumber: z.string().regex(/^\+?250[0-9]{9}$/, 'Enter a valid Rwandan phone number (+250...)'),
   password:   z.string()
     .min(8, 'Must be at least 8 characters')
     .regex(/[0-9]/, 'Must contain at least one number'),
@@ -43,12 +43,17 @@ export default function IndividualRegisterPage() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      // TODO [BACKEND]: Replace with authService.registerIndividual({ ...data, accountType: 'INDIVIDUAL' })
-      await authService.registerIndividual({ ...data, accountType: 'INDIVIDUAL' });
+      await delay(800);
+      mockRegister({
+        fullName:    data.fullName,
+        email:       data.email,
+        phoneNumber: data.phoneNumber,
+        nationalId:  data.nationalId,
+      });
       toast.success('Account created! Please log in.');
       router.push('/auth/login');
     } catch (err: any) {
-      toast.error(err.response?.data?.message ?? 'Registration failed. Please try again.');
+      toast.error(err.message ?? 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -81,6 +86,22 @@ export default function IndividualRegisterPage() {
             {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
           </div>
 
+          {/* Email */}
+          <div>
+            <label className={labelCls}>Email Address</label>
+            <div className="relative">
+              <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                {...register('email')}
+                type="email"
+                className={inputCls}
+                style={{ height: '44px', paddingLeft: '36px', paddingRight: '14px' }}
+                placeholder="e.g., aline@example.com"
+              />
+            </div>
+            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
+          </div>
+
           {/* National ID + Phone — 1 col mobile, 2 col md+ */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -102,13 +123,13 @@ export default function IndividualRegisterPage() {
               <div className="relative">
                 <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
-                  {...register('phone')}
+                  {...register('phoneNumber')}
                   className={inputCls}
                   style={{ height: '44px', paddingLeft: '36px', paddingRight: '14px' }}
                   placeholder="+250 7X XXX XXX"
                 />
               </div>
-              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+              {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber.message}</p>}
             </div>
           </div>
 

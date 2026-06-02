@@ -2,6 +2,11 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import toast from 'react-hot-toast';
+import type { RootState } from '@/store';
+import { mockWithdraw, delay } from '@/lib/mockData';
 import {
   ArrowLeft,
   ArrowRight,
@@ -85,6 +90,10 @@ function formatRwf(n: number) {
 }
 
 export default function WithdrawPage() {
+  const router = useRouter();
+  const userId = useSelector((s: RootState) => s.auth.user?.id);
+  const [submitting, setSubmitting] = useState(false);
+
   const [selected, setSelected] = useState<Method>('momo');
   const [rawAmount, setRawAmount] = useState('');
 
@@ -98,6 +107,22 @@ export default function WithdrawPage() {
   const netAmount = Math.max(0, numericAmount - fee);
 
   const isValid = numericAmount >= 1000 && numericAmount <= AVAILABLE_BALANCE;
+
+  async function handleWithdraw() {
+    if (!userId) { toast.error('You must be logged in to withdraw.'); return; }
+    if (!isValid) return;
+    setSubmitting(true);
+    try {
+      await delay(800);
+      mockWithdraw(userId, numericAmount);
+      toast.success('Withdrawal request submitted successfully!');
+      router.push('/dashboard/member');
+    } catch (err: any) {
+      toast.error(err.message ?? 'Withdrawal failed. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   function handleQuickAmount(amount: number) {
     setRawAmount(formatRwf(amount));
@@ -411,10 +436,11 @@ export default function WithdrawPage() {
                   <div className="flex flex-col gap-3 pt-2">
                     <button
                       type="button"
-                      disabled={!isValid}
+                      disabled={!isValid || submitting}
+                      onClick={handleWithdraw}
                       className="flex w-full items-center justify-center gap-3 rounded-[14px] bg-gradient-to-br from-[#1c862f] to-[#0f6f29] py-5 text-[14px] font-extrabold text-white shadow-[0_12px_28px_rgba(23,122,45,0.28)] transition hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      Confirm Withdrawal
+                      {submitting ? 'Processing...' : 'Confirm Withdrawal'}
                       <ArrowRight className="h-4 w-4" />
                     </button>
                     <Link

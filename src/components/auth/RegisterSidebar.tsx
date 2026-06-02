@@ -11,7 +11,7 @@ interface Step {
 
 export default function RegisterSidebar({ steps }: { steps: Step[] }) {
   return (
-    <aside className="bg-white flex flex-col h-full min-h-screen px-6 py-8 overflow-hidden">
+    <aside className="bg-white flex flex-col h-full px-6 py-8 overflow-hidden sticky top-0">
       {/* Logo */}
       <div className="mb-8">
         <Link href="/" className="text-xl font-bold block" style={{ color: '#166534' }}>

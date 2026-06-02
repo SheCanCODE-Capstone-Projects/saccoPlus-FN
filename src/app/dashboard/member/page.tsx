@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import ContributionForm from '@/components/savings/ContributionForm';
 import {
   ArrowLeftRight,
   BarChart3,
@@ -34,6 +35,7 @@ const navItems = [
   { label: 'Transactions', icon: ArrowLeftRight },
   { label: 'Groups', icon: Users },
   { label: 'Loans', icon: Landmark },
+  { label: 'Savings', icon:  HandCoins },
   { label: 'Admin Hub', icon: ShieldCheck },
   { label: 'Reports', icon: BarChart3 },
 ];
@@ -182,9 +184,8 @@ export default function MemberDashboardPage() {
 
           <nav className="flex gap-2 overflow-x-auto px-4 pb-4 lg:mt-8 lg:block lg:space-y-2 lg:px-5 lg:pb-0">
             {navItems.map((item) => (
-              <Link
+              <button
                 key={item.label}
-                href="#"
                 onClick={() => setActiveNav(item.label)}
                 className={`flex h-10 shrink-0 items-center gap-3 rounded-[8px] px-3 text-[13px] font-semibold transition hover:bg-white hover:text-[#0f6f29] hover:shadow-sm lg:w-full ${
                   activeNav === item.label
@@ -194,7 +195,7 @@ export default function MemberDashboardPage() {
               >
                 <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
                 {item.label}
-              </Link>
+              </button>
             ))}
           </nav>
 
@@ -298,35 +299,39 @@ export default function MemberDashboardPage() {
 
           <div className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-11 lg:py-8">
             <div className="mx-auto max-w-[940px]">
-              <div className="flex flex-col items-stretch justify-between gap-5 md:flex-row md:items-end">
-                <div>
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#7d8779]">
-                    {activeSection.eyebrow.split(' / ')[0]} /{' '}
-                    <span className="text-[#0f6f29]">
-                      {activeSection.eyebrow.split(' / ')[1]}
-                    </span>
-                  </p>
-                  <h1 className="mt-2 text-[28px] font-extrabold leading-tight text-[#1f251e] sm:text-[32px]">
-                    {activeSection.title}
-                  </h1>
-                  <p className="mt-3 max-w-[540px] text-[13px] leading-5 text-[#596256]">
-                    {activeSection.description}
-                  </p>
-                </div>
+              {activeNav !== 'Loans' && activeNav !== 'Savings' && (
+                <div className="flex flex-col items-stretch justify-between gap-5 md:flex-row md:items-end">
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#7d8779]">
+                      {activeSection.eyebrow.split(' / ')[0]} /{' '}
+                      <span className="text-[#0f6f29]">
+                        {activeSection.eyebrow.split(' / ')[1]}
+                      </span>
+                    </p>
+                    <h1 className="mt-2 text-[28px] font-extrabold leading-tight text-[#1f251e] sm:text-[32px]">
+                      {activeSection.title}
+                    </h1>
+                    <p className="mt-3 max-w-[540px] text-[13px] leading-5 text-[#596256]">
+                      {activeSection.description}
+                    </p>
+                  </div>
 
-                <div className="flex flex-col gap-3 sm:flex-row">
-                  <button className="flex h-11 items-center justify-center gap-2 rounded-[8px] bg-white px-4 text-[13px] font-bold text-[#20271f] shadow-sm">
-                    <Download className="h-[15px] w-[15px]" />
-                    Export
-                  </button>
-                  <button className="flex h-11 items-center justify-center gap-2 rounded-[8px] bg-[#177a2d] px-5 text-[13px] font-bold text-white shadow-[0_12px_22px_rgba(23,122,45,0.24)]">
-                    <Plus className="h-[15px] w-[15px]" />
-                    New Transaction
-                  </button>
+                  <div className="flex flex-col gap-3 sm:flex-row">
+                    <button className="flex h-11 items-center justify-center gap-2 rounded-[8px] bg-white px-4 text-[13px] font-bold text-[#20271f] shadow-sm">
+                      <Download className="h-[15px] w-[15px]" />
+                      Export
+                    </button>
+                    <button className="flex h-11 items-center justify-center gap-2 rounded-[8px] bg-[#177a2d] px-5 text-[13px] font-bold text-white shadow-[0_12px_22px_rgba(23,122,45,0.24)]">
+                      <Plus className="h-[15px] w-[15px]" />
+                      New Transaction
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
-              {activeNav === 'Transactions' ? (
+              {activeNav === 'Savings' ? (
+                <ContributionForm />
+              ) : activeNav === 'Transactions' ? (
                 <TransactionsSection />
               ) : activeNav === 'Dashboard' ? (
                 <DashboardOverview />
@@ -340,7 +345,7 @@ export default function MemberDashboardPage() {
                     SACCOPlus
                   </p>
                   <p className="mt-2 uppercase tracking-[0.16em]">
-                    © 2024 SACCOPlus. Rooted in Rwanda.
+                    © 2026 SACCOPlus. Rooted in Rwanda.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-4 uppercase tracking-[0.14em] sm:gap-8">

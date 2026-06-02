@@ -282,7 +282,7 @@ export default function AdminDashboardPage() {
                     SACCOPlus
                   </p>
                   <p className="mt-2 uppercase tracking-[0.16em]">
-                    © 2024 SACCOPlus. Rooted in Rwanda.
+                    © 2026 SACCOPlus. Rooted in Rwanda.
                   </p>
                 </div>
                 <div className="flex flex-wrap gap-8 uppercase tracking-[0.14em]">

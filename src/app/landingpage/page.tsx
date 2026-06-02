@@ -38,6 +38,8 @@ export default function LandingPage() {
               <Link href="#services">Savings</Link>
               <Link href="#loans">Loans</Link>
               <Link href="#contact">Impact</Link>
+              <Link href="/about">About Us</Link>
+              <Link href="/contact">Contact</Link>
             </nav>
           </div>
 
@@ -304,7 +306,7 @@ export default function LandingPage() {
             <p className="text-[13px] font-extrabold normal-case tracking-[-0.04em] text-[#0d7327]">
               SACCOPlus
             </p>
-            <p className="mt-2">(c) 2024 SACCOPlus. Rooted in Rwanda.</p>
+            <p className="mt-2">(c) 2026 SACCOPlus. Rooted in Rwanda.</p>
           </div>
           <div className="flex flex-wrap gap-8">
             <Link href="#">Privacy Policy</Link>

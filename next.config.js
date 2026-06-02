@@ -10,10 +10,15 @@ const nextConfig = {
     NEXT_PUBLIC_APP_NAME: 'SACCOPlus Rwanda',
   },
   async rewrites() {
+    const backend = process.env.NEXT_PUBLIC_API_URL ?? 'https://saccoplus-bn-2.onrender.com';
     return [
       {
+        source: '/api/auth/:path*',
+        destination: `${backend}/api/auth/:path*`,
+      },
+      {
         source: '/api/v1/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080'}/api/v1/:path*`,
+        destination: `${backend}/api/v1/:path*`,
       },
     ];
   },

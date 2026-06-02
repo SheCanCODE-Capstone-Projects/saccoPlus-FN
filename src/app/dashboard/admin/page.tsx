@@ -29,7 +29,7 @@ const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard },
   { label: 'Transactions', icon: ArrowLeftRight },
   { label: 'Groups', icon: Users },
-  { label: 'Loans', icon: Landmark },
+  { label: 'Loans', icon: Landmark, href: '/loans' },
   { label: 'Admin Hub', icon: ShieldCheck },
   { label: 'Reports', icon: BarChart3 },
 ];
@@ -181,21 +181,29 @@ export default function AdminDashboardPage() {
           </div>
 
           <nav className="mt-20 space-y-2 px-5">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                href="#"
-                onClick={() => setActiveNav(item.label)}
-                className={`flex h-10 items-center gap-3 rounded-[8px] px-3 text-[13px] font-semibold transition hover:bg-white hover:text-[#0f6f29] hover:shadow-sm ${
-                  activeNav === item.label
-                    ? 'bg-white text-[#3f493e] shadow-sm'
-                    : 'text-[#3f493e]'
-                }`}
-              >
-                <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const cls = `flex h-10 items-center gap-3 rounded-[8px] px-3 text-[13px] font-semibold transition hover:bg-white hover:text-[#0f6f29] hover:shadow-sm ${
+                activeNav === item.label
+                  ? 'bg-white text-[#3f493e] shadow-sm'
+                  : 'text-[#3f493e]'
+              }`;
+              return item.href ? (
+                <Link key={item.label} href={item.href} className={cls}>
+                  <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
+                  {item.label}
+                </Link>
+              ) : (
+                <Link
+                  key={item.label}
+                  href="#"
+                  onClick={() => setActiveNav(item.label)}
+                  className={cls}
+                >
+                  <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
+                  {item.label}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="mt-auto border-t border-[#dfe7d9] px-6 py-7">

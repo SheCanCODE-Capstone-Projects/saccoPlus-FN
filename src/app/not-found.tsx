@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowLeft, Home, Search } from 'lucide-react';
 
@@ -52,13 +54,14 @@ export default function NotFound() {
             <Home className="h-4 w-4" />
             Go to Dashboard
           </Link>
-          <Link
-            href="javascript:history.back()"
+          <button
+            type="button"
+            onClick={() => window.history.back()}
             className="flex flex-1 items-center justify-center gap-2 rounded-[12px] border-2 border-[#dfe7d9] px-5 py-3.5 text-[13px] font-extrabold text-[#596256] transition hover:bg-[#eef4e8] active:scale-[0.98]"
           >
             <ArrowLeft className="h-4 w-4" />
             Go Back
-          </Link>
+          </button>
         </div>
 
         {/* Quick links */}

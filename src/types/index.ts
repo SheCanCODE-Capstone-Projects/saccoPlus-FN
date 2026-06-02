@@ -1,106 +1,151 @@
-export type UserRole = 'MEMBER' | 'GROUP_MEMBER' | 'GROUP_LEADER' | 'LOAN_OFFICER' | 'ADMIN';
-export type AccountType = 'INDIVIDUAL' | 'GROUP';
+// ─── Auth ──────────────────────────────────────────────────────────────────
+export type UserRole = 'MEMBER' | 'LOAN_OFFICER' | 'ADMIN';
 
-export interface User {
-  id:          string;
+export interface AuthResponse {
+  accessToken:  string;
+  refreshToken: string;
+  tokenType:    string;
+  userId:       number;
+  email:        string;
+  fullName:     string;
+  role:         string;
+}
+
+export interface RegisterRequest {
   fullName:    string;
   email:       string;
-  phone:       string;
+  password:    string;
+  phoneNumber: string;
   nationalId:  string;
-  role:        UserRole;
-  accountType: AccountType;
-  isActive:    boolean;
-  createdAt:   string;
+  role?:       UserRole;
 }
 
-export type TransactionType   = 'DEPOSIT' | 'WITHDRAWAL';
-export type TransactionStatus = 'PENDING' | 'COMPLETED' | 'FAILED';
-
-export interface Transaction {
-  id:          string;
-  type:        TransactionType;
-  amount:      number;
-  status:      TransactionStatus;
-  reference:   string;
-  description: string;
-  createdAt:   string;
+export interface LoginRequest {
+  email:    string;
+  password: string;
 }
 
-export interface SavingsAccount {
-  id:        string;
-  userId:    string;
-  balance:   number;
-  createdAt: string;
+export interface UserProfile {
+  userId:      number;
+  email:       string;
+  fullName:    string;
+  phoneNumber: string;
+  role:        string;
+  active:      boolean;
 }
 
-export type LoanStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'INFO_REQUIRED' | 'DISBURSED';
-
-export interface LoanApplication {
-  id:              string;
-  applicantId:     string;
-  applicantName:   string;
-  amount:          number;
-  durationMonths:  number;
-  purpose:         string;
-  documentUrl?:    string;
-  status:          LoanStatus;
-  reviewedBy?:     string;
-  reviewerComment?: string;
-  createdAt:       string;
-  reviewedAt?:     string;
+// ─── Wallet ────────────────────────────────────────────────────────────────
+export interface Wallet {
+  id:      number;
+  balance: number;
 }
 
-export interface LoanInstallment {
-  installmentNumber: number;
-  dueDate:           string;
-  principalAmount:   number;
-  interestAmount:    number;
-  totalAmount:       number;
-  paidAmount:        number;
-  status:            'PENDING' | 'PAID' | 'LATE' | 'PARTIAL';
+export interface DepositRequest {
+  userId: number;
+  amount: number;
+}
+
+export interface WithdrawalRequest {
+  userId: number;
+  amount: number;
+}
+
+// ─── Loan ──────────────────────────────────────────────────────────────────
+export type LoanStatus =
+  | 'PENDING'
+  | 'APPROVED'
+  | 'REJECTED'
+  | 'INFO_REQUIRED'
+  | 'DISBURSED'
+  | 'ACTIVE'
+  | 'COMPLETED'
+  | 'DEFAULTED';
+
+export interface ApplyLoanRequest {
+  userId:    number;
+  amount:    number;
+  duration:  number;
+  documents?: string;
+}
+
+export interface RepaymentRequest {
+  loanId: number;
+  amount: number;
+}
+
+export interface ReviewLoanRequest {
+  comment: string;
+}
+
+export interface LoanResponse {
+  message:          string;
+  amount:           number;
+  remainingBalance: number;
+  status:           LoanStatus;
+}
+
+export interface IndividualUser {
+  id:        number;
+  firstName: string;
+  lastName:  string;
+  phoneNumber: string;
+  role:      UserRole;
+  wallet:    Wallet;
 }
 
 export interface Loan {
-  id:                 string;
-  applicationId:      string;
-  principal:          number;
-  interestRate:       number;
-  totalAmount:        number;
-  outstandingBalance: number;
-  status:             'ACTIVE' | 'PAID_OFF' | 'DEFAULTED';
-  disbursedAt:        string;
-  installments:       LoanInstallment[];
+  id:               number;
+  amount:           number;
+  duration:         number;
+  interestRate:     number;
+  remainingBalance: number;
+  documents?:       string;
+  officerComment?:  string;
+  status:           LoanStatus;
+  user:             IndividualUser;
 }
 
-export interface Group {
-  id:                    string;
-  name:                  string;
-  leaderId:              string;
-  payoutModel:           'ROTATIONAL' | 'POOLED';
-  contributionAmount:    number;
-  contributionFrequency: 'WEEKLY' | 'MONTHLY';
-  walletBalance:         number;
-  isActive:              boolean;
-  members:               GroupMember[];
+export interface Installment {
+  id:                number;
+  installmentNumber: number;
+  dueDate:           string;
+  principal:         number;
+  interest:          number;
+  totalAmount:       number;
+  remainingBalance:  number;
+  paymentStatus:     'PAID' | 'UNPAID';
+  loan:              Loan;
 }
 
-export interface GroupMember {
-  userId:       string;
-  fullName:     string;
-  joinedAt:     string;
-  payoutOrder:  number;
+// ─── Group ─────────────────────────────────────────────────────────────────
+export interface MemberDto {
+  firstName: string;
+  lastName:  string;
+  phoneNumber: string;
+}
+
+export interface RegisterGroupRequest {
+  groupName:               string;
+  representativeFirstName: string;
+  representativeLastName:  string;
+  representativePhone:     string;
+  password:                string;
+  members:                 MemberDto[];
+}
+
+// ─── UI types (not in API, used by components) ─────────────────────────────
+export interface Transaction {
+  id:          string;
+  type:        'DEPOSIT' | 'WITHDRAWAL';
+  amount:      number;
+  status:      'PENDING' | 'COMPLETED' | 'FAILED';
+  reference:   string;
+  description: string;
+  createdAt:   string;
 }
 
 export interface ApiError {
   message:   string;
   status:    number;
   timestamp: string;
-}
-
-export interface PageResponse<T> {
-  content:       T[];
-  totalElements: number;
-  totalPages:    number;
-  size:          number;
-  number:        number;
 }

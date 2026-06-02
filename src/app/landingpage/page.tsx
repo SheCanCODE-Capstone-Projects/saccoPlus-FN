@@ -36,7 +36,7 @@ export default function LandingPage() {
             <nav className="hidden items-center gap-5 text-[10px] font-bold text-[#52604d] md:flex">
               <Link href="#home" className="text-[#0c7025]">Home</Link>
               <Link href="#services">Savings</Link>
-              <Link href="#loans">Loans</Link>
+              <Link href="/loans">Loans</Link>
               <Link href="#contact">Impact</Link>
               <Link href="/about">About Us</Link>
               <Link href="/contact">Contact</Link>

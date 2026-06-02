@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Eye, EyeOff, LockKeyhole, UserRound } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,6 +25,7 @@ const brandingImage =
 export default function LoginPage() {
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
 
   const {
@@ -48,7 +49,8 @@ export default function LoginPage() {
         ADMIN: '/dashboard/admin',
       };
 
-      router.push(roleRoutes[result.user.role] ?? '/dashboard/member');
+      const from = searchParams.get('from');
+      router.push(from ?? roleRoutes[result.user.role] ?? '/dashboard/member');
     } catch (error: any) {
       toast.error(error?.message ?? 'Login failed. Please try again.');
     } finally {

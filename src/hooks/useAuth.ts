@@ -10,14 +10,11 @@
 import { useAppDispatch, useAppSelector } from './redux';
 import { logoutUser, setUser, clearError } from '@/store/slices/authSlice';
 import { useRouter } from 'next/navigation';import Cookies from 'js-cookie';
-// TEMP: mock authenticated user — remove when real auth is wired
-// TODO: Reconnect login page when backend auth is ready
 const MOCK_USER = {
-  id:          'mock-001',
-  fullName:    'Admin User',
-  email:       'admin@saccoplus.rw',
-  role:        'ADMIN',
-  accountType: 'INDIVIDUAL',
+  id:       1,
+  fullName: 'Admin User',
+  email:    'admin@saccoplus.rw',
+  role:     'ADMIN',
 };
 
 export function useAuth() {

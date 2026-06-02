@@ -34,7 +34,7 @@ const navItems = [
   { label: 'Dashboard', icon: LayoutDashboard },
   { label: 'Transactions', icon: ArrowLeftRight },
   { label: 'Groups', icon: Users },
-  { label: 'Loans', icon: Landmark },
+  { label: 'Loans', icon: Landmark, href: '/loans' },
   { label: 'Savings', icon:  HandCoins },
   { label: 'Admin Hub', icon: ShieldCheck },
   { label: 'Reports', icon: BarChart3 },
@@ -183,20 +183,28 @@ export default function MemberDashboardPage() {
           </div>
 
           <nav className="flex gap-2 overflow-x-auto px-4 pb-4 lg:mt-8 lg:block lg:space-y-2 lg:px-5 lg:pb-0">
-            {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => setActiveNav(item.label)}
-                className={`flex h-10 shrink-0 items-center gap-3 rounded-[8px] px-3 text-[13px] font-semibold transition hover:bg-white hover:text-[#0f6f29] hover:shadow-sm lg:w-full ${
-                  activeNav === item.label
-                    ? 'bg-white text-[#3f493e] shadow-sm'
-                    : 'text-[#3f493e]'
-                }`}
-              >
-                <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
-                {item.label}
-              </button>
-            ))}
+            {navItems.map((item) => {
+              const cls = `flex h-10 shrink-0 items-center gap-3 rounded-[8px] px-3 text-[13px] font-semibold transition hover:bg-white hover:text-[#0f6f29] hover:shadow-sm lg:w-full ${
+                activeNav === item.label
+                  ? 'bg-white text-[#3f493e] shadow-sm'
+                  : 'text-[#3f493e]'
+              }`;
+              return item.href ? (
+                <Link key={item.label} href={item.href} className={cls}>
+                  <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.label}
+                  onClick={() => setActiveNav(item.label)}
+                  className={cls}
+                >
+                  <item.icon className="h-[17px] w-[17px]" strokeWidth={2} />
+                  {item.label}
+                </button>
+              );
+            })}
           </nav>
 
           <div className="mt-auto hidden border-t border-[#dfe7d9] px-6 py-7 lg:block">

@@ -2,6 +2,11 @@
 
 import Link from 'next/link';
 import { useState, useRef, ChangeEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
+import type { RootState } from '@/store';
+import { mockLoanApplication, delay } from '@/lib/mockData';
 import {
   ArrowLeft,
   ArrowRight,
@@ -78,6 +83,10 @@ interface UploadedFile {
 
 /* ─── Page ─── */
 export default function LoanApplicationPage() {
+  const router = useRouter();
+  const userId = useSelector((s: RootState) => s.auth.user?.id);
+  const [submitting, setSubmitting] = useState(false);
+
   /* step */
   const [step, setStep] = useState(1);
 
@@ -106,6 +115,21 @@ export default function LoanApplicationPage() {
   const step2Valid = nationalId !== null && proofOfIncome !== null;
 
   const sliderPct = ((amount - MIN_AMOUNT) / (MAX_AMOUNT - MIN_AMOUNT)) * 100;
+
+  async function handleSubmitApplication() {
+    if (!userId) { toast.error('You must be logged in to apply.'); return; }
+    setSubmitting(true);
+    try {
+      await delay(800);
+      const data = mockLoanApplication({ amount, duration, purpose });
+      toast.success(data.message || 'Loan application submitted!');
+      router.push('/loans');
+    } catch (err: any) {
+      toast.error(err.message ?? 'Failed to submit loan application.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   function handleFile(
     e: ChangeEvent<HTMLInputElement>,
@@ -500,9 +524,11 @@ export default function LoanApplicationPage() {
                           </button>
                           <button
                             type="button"
-                            className="flex items-center gap-3 rounded-[14px] bg-gradient-to-br from-[#1c862f] to-[#0f6f29] px-8 py-3.5 text-[14px] font-extrabold text-white shadow-[0_12px_28px_rgba(23,122,45,0.28)] transition hover:opacity-90 active:scale-[0.98]"
+                            disabled={submitting}
+                            onClick={handleSubmitApplication}
+                            className="flex items-center gap-3 rounded-[14px] bg-gradient-to-br from-[#1c862f] to-[#0f6f29] px-8 py-3.5 text-[14px] font-extrabold text-white shadow-[0_12px_28px_rgba(23,122,45,0.28)] transition hover:opacity-90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                           >
-                            Submit Application
+                            {submitting ? 'Submitting...' : 'Submit Application'}
                             <ArrowRight className="h-4 w-4" />
                           </button>
                         </div>

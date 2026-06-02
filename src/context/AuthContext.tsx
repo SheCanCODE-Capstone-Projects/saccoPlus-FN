@@ -1,22 +1,15 @@
 'use client';
-/**
- * context/AuthContext.tsx
- * Provides auth state (user, loading, error) and helpers (login, logout)
- * to the entire component tree.
- *
- * TODO [BACKEND]: On app load, call GET /user/profile with the stored token
- * to rehydrate the user session (see useEffect below).
- */
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { login as loginService, logout as logoutService, isAuthenticated } from '@/services/auth';
-import { userService } from '@/services/api';
+import { logout as logoutService, isAuthenticated } from '@/services/auth';
+import { mockLogin, mockGetProfile, delay } from '@/lib/mockData';
 
 interface AuthUser {
-  id: string;
-  fullName: string;
-  email: string;
-  role: string;
-  accountType: string;
+  id:          number;
+  fullName:    string;
+  email:       string;
+  phoneNumber: string;
+  role:        string;
+  active:      boolean;
 }
 
 interface AuthContextValue {
@@ -36,23 +29,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState<string | null>(null);
 
-  // TODO [BACKEND]: Rehydrate session on mount — fetch profile if token exists
   useEffect(() => {
     if (!isAuthenticated()) { setLoading(false); return; }
-    userService.getProfile()
-      .then(({ data }) => setUser(data))
-      .catch(() => { /* token expired — silently clear */ })
-      .finally(() => setLoading(false));
+    delay(300).then(() => {
+      const profile = mockGetProfile(1);
+      setUser({
+        id: profile.userId,
+        fullName: profile.fullName,
+        email: profile.email,
+        phoneNumber: profile.phoneNumber,
+        role: profile.role,
+        active: profile.active,
+      });
+      setLoading(false);
+    });
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
     try {
-      const userData = await loginService(email, password);
-      setUser(userData);
+      await delay(600);
+      const authData = mockLogin(email, password);
+      setUser({
+        id:          authData.userId,
+        fullName:    authData.fullName,
+        email:       authData.email,
+        phoneNumber: '',
+        role:        authData.role,
+        active:      true,
+      });
     } catch (err: any) {
-      setError(err.response?.data?.message ?? 'Login failed. Please try again.');
+      setError(err.message ?? 'Login failed. Please try again.');
       throw err;
     } finally {
       setLoading(false);
@@ -73,7 +81,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Hook — use inside any client component */
 export function useAuthContext(): AuthContextValue {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuthContext must be used inside <AuthProvider>');

@@ -1,15 +1,13 @@
 import apiClient from './client';
+import type { ApplyLoanRequest, RepaymentRequest, ReviewLoanRequest, LoanResponse, Loan, Installment } from '@/types';
 
 export const loansApi = {
-  apply:           (data: { amount: number; durationMonths: number; purpose: string; documentUrl?: string }) =>
-    apiClient.post('/loans/apply', data),
-  getMyApplications: ()              => apiClient.get('/loans/my-applications'),
-  getMyLoans:        ()              => apiClient.get('/loans/my-loans'),
-  getSchedule:       (id: string)    => apiClient.get(`/loans/${id}/schedule`),
-  repay:             (id: string, amount: number) => apiClient.post(`/loans/${id}/repay`, { amount }),
-  // Loan Officer
-  getPending:        (page = 0, size = 20) => apiClient.get('/loans/pending', { params: { page, size } }),
-  review:            (id: string, data: { decision: 'APPROVED' | 'REJECTED' | 'INFO_REQUIRED'; comment: string }) =>
-    apiClient.put(`/loans/${id}/review`, data),
-  disburse:          (id: string)    => apiClient.post(`/loans/${id}/disburse`),
+  apply:     (data: ApplyLoanRequest)                    => apiClient.post<LoanResponse>('/api/v1/loans/apply', data),
+  repay:     (data: RepaymentRequest)                    => apiClient.post<LoanResponse>('/api/v1/loans/repay', data),
+  pending:   ()                                          => apiClient.get<Loan[]>('/api/v1/loans/pending'),
+  schedule:  (loanId: number)                            => apiClient.get<Installment[]>(`/api/v1/loans/${loanId}/schedule`),
+  approve:   (loanId: number, data: ReviewLoanRequest)   => apiClient.post<LoanResponse>(`/api/v1/loans/${loanId}/approve`, data),
+  reject:    (loanId: number, data: ReviewLoanRequest)   => apiClient.post<LoanResponse>(`/api/v1/loans/${loanId}/reject`, data),
+  info:      (loanId: number, data: ReviewLoanRequest)   => apiClient.post<LoanResponse>(`/api/v1/loans/${loanId}/info`, data),
+  disburse:  (loanId: number)                            => apiClient.post<LoanResponse>(`/api/v1/loans/${loanId}/disburse`),
 };

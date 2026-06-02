@@ -1,10 +1,6 @@
-/**
- * services/auth.ts
- * JWT authentication helpers.
- * TODO [BACKEND]: These functions connect to your auth endpoints via authService.
- */
 import Cookies from 'js-cookie';
 import { authService } from './api';
+import type { AuthResponse } from '@/types';
 
 const ACCESS_TOKEN_KEY  = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
@@ -26,19 +22,12 @@ export function clearTokens() {
   Cookies.remove(REFRESH_TOKEN_KEY);
 }
 
-/**
- * login — calls POST /auth/login, stores tokens, returns user object.
- * TODO [BACKEND]: Adjust response shape to match your API contract.
- */
-export async function login(email: string, password: string) {
+export async function login(email: string, password: string): Promise<AuthResponse> {
   const { data } = await authService.login(email, password);
   storeTokens(data.accessToken, data.refreshToken);
-  return data.user;
+  return data;
 }
 
-/**
- * logout — clears tokens and redirects to login.
- */
 export function logout() {
   clearTokens();
   window.location.href = '/auth/login';

@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     '/loans/:path*',
-    '/dashboard/member/savings/:path*',
+    '/dashboard/:path*',
     '/withdraw/:path*',
   ],
 };

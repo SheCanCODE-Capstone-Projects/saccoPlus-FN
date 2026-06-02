@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Eye, EyeOff, LockKeyhole, UserRound } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -22,7 +22,7 @@ const backgroundImage = '/images/Hero%20Background%20Canvas.png';
 const brandingImage =
   '/images/Branding%20%26%20Value%20Proposition%20%28Editorial%20Side%29.png';
 
-export default function LoginPage() {
+function LoginPageInner() {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,14 +43,12 @@ export default function LoginPage() {
 
       const roleRoutes: Record<string, string> = {
         MEMBER: '/dashboard/member',
-        GROUP_MEMBER: '/dashboard/member',
-        GROUP_LEADER: '/dashboard/group',
-        LOAN_OFFICER: '/dashboard/loan-officer',
+        LOAN_OFFICER: '/dashboard/member',
         ADMIN: '/dashboard/admin',
       };
 
       const from = searchParams.get('from');
-      router.push(from ?? roleRoutes[result.user.role] ?? '/dashboard/member');
+      router.push(from ?? roleRoutes[result.role] ?? '/dashboard/member');
     } catch (error: any) {
       toast.error(error?.message ?? 'Login failed. Please try again.');
     } finally {
@@ -85,6 +83,14 @@ export default function LoginPage() {
         </section>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageInner />
+    </Suspense>
   );
 }
 

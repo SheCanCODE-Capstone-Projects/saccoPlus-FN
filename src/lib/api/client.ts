@@ -1,9 +1,8 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import Cookies from 'js-cookie';
 
-// TODO [BACKEND]: Set NEXT_PUBLIC_API_URL in .env.local to your backend base URL
 export const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? '/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'https://saccoplus-bn-2.onrender.com',
   headers: { 'Content-Type': 'application/json' },
   timeout: 15000,
 });
@@ -46,7 +45,7 @@ apiClient.interceptors.response.use(
 
       try {
         const refreshToken = Cookies.get('refreshToken');
-        const { data } = await axios.post('/api/v1/auth/refresh', { refreshToken });
+        const { data } = await apiClient.post('/api/auth/refresh', { refreshToken });
         Cookies.set('accessToken', data.accessToken, { expires: 1 });
         processQueue(null, data.accessToken);
         original.headers.Authorization = `Bearer ${data.accessToken}`;

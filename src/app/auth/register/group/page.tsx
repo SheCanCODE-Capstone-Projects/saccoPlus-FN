@@ -9,19 +9,18 @@ import Image from 'next/image';
 import toast from 'react-hot-toast';
 import { Eye, EyeOff, Users, User, CreditCard, Phone, Lock, Plus, Trash2 } from 'lucide-react';
 import RegisterLayout from '@/components/auth/RegisterLayout';
-// TODO [BACKEND]: Replace with authService.registerGroup() when backend is ready
-import { authService } from '@/services/api';
+import { mockGroupRegister, delay } from '@/lib/mockData';
 
 const memberSchema = z.object({
   name:       z.string().min(2, 'Required'),
   nationalId: z.string().length(16, '16 chars'),
-  phone:      z.string().regex(/^\+?250[0-9]{9}$/, 'Invalid phone'),
+  phoneNumber: z.string().regex(/^\+?250[0-9]{9}$/, 'Invalid phone'),
 });
 
 const schema = z.object({
   groupName:                z.string().min(2, 'Group name is required'),
   representativeName:       z.string().min(2, 'Representative name is required'),
-  phone:                    z.string().regex(/^\+?250[0-9]{9}$/, 'Enter a valid Rwandan phone number'),
+  phoneNumber:              z.string().regex(/^\+?250[0-9]{9}$/, 'Enter a valid Rwandan phone number'),
   representativeNationalId: z.string().length(16, 'National ID must be 16 characters'),
   password:                 z.string()
     .min(8, 'Must be at least 8 characters')
@@ -67,20 +66,29 @@ export default function GroupRegisterPage() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      // TODO [BACKEND]: authService.registerGroup() connects to POST /auth/register/group
-      await authService.registerGroup({
-        groupName:                data.groupName,
-        representativeName:       data.representativeName,
-        representativeNationalId: data.representativeNationalId,
-        phone:                    data.phone,
-        password:                 data.password,
-        members:                  data.members ?? [],
-        accountType:              'GROUP',
+      const nameParts = data.representativeName.trim().split(/\s+/);
+      const firstName = nameParts[0] || '';
+      const lastName  = nameParts.slice(1).join(' ') || nameParts[0] || '';
+
+      await delay(800);
+      mockGroupRegister({
+        groupName:               data.groupName,
+        representativeFirstName: firstName,
+        representativeLastName:  lastName,
+        representativePhone:     data.phoneNumber,
+        members:                 (data.members ?? []).map((m) => {
+          const parts = m.name.trim().split(/\s+/);
+          return {
+            firstName: parts[0] || '',
+            lastName:  parts.slice(1).join(' ') || parts[0] || '',
+            phoneNumber: m.phoneNumber,
+          };
+        }),
       });
       toast.success('Group account created! Please log in.');
       router.push('/auth/login');
     } catch (err: any) {
-      toast.error(err.response?.data?.message ?? 'Registration failed. Please try again.');
+      toast.error(err.message ?? 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -148,13 +156,13 @@ export default function GroupRegisterPage() {
               <div className="relative">
                 <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
-                  {...register('phone')}
+                  {...register('phoneNumber')}
                   className={inputCls}
                   style={{ height: '44px', paddingLeft: '36px', paddingRight: '14px' }}
                   placeholder="+250 7X XXX XXX"
                 />
               </div>
-              {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>}
+              {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber.message}</p>}
             </div>
           </div>
 
@@ -193,7 +201,7 @@ export default function GroupRegisterPage() {
               </label>
               <button
                 type="button"
-                onClick={() => append({ name: '', nationalId: '', phone: '' })}
+                onClick={() => append({ name: '', nationalId: '', phoneNumber: '' })}
                 className="flex items-center gap-1 text-xs font-bold hover:opacity-75"
                 style={{ color: '#166534' }}
               >
@@ -232,7 +240,7 @@ export default function GroupRegisterPage() {
                       maxLength={16}
                     />
                     <input
-                      {...register(`members.${i}.phone`)}
+                      {...register(`members.${i}.phoneNumber`)}
                       className="w-full h-9 bg-gray-50 border border-gray-200 rounded-lg px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#166534]"
                       placeholder="+250 7X XXX XXX"
                     />

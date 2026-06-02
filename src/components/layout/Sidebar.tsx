@@ -8,30 +8,30 @@ import { useRouter } from 'next/navigation';
 
 const navByRole: Record<string, { href: string; label: string; icon: string }[]> = {
   MEMBER: [
-    { href: '/dashboard/member', label: 'Dashboard',    icon: '🏠' },
-    { href: '/savings',          label: 'Savings',       icon: '💰' },
-    { href: '/loans',            label: 'Loans',         icon: '🏦' },
-    { href: '/reports',          label: 'Reports',       icon: '📄' },
-    { href: '/settings',         label: 'Settings',      icon: '⚙️'  },
+    { href: '/dashboard/member',        label: 'Dashboard',    icon: '🏠' },
+    { href: '/dashboard/member/savings', label: 'Savings',       icon: '💰' },
+    { href: '/dashboard/member/loans',   label: 'Loans',         icon: '🏦' },
+    { href: '/reports',                  label: 'Reports',       icon: '📄' },
+    { href: '/settings',                 label: 'Settings',      icon: '⚙️'  },
   ],
   GROUP_LEADER: [
-    { href: '/dashboard/group',  label: 'Dashboard',    icon: '🏠' },
-    { href: '/savings',          label: 'Group Savings', icon: '💰' },
-    { href: '/loans',            label: 'Loans',         icon: '🏦' },
-    { href: '/reports',          label: 'Reports',       icon: '📄' },
-    { href: '/settings',         label: 'Settings',      icon: '⚙️'  },
+    { href: '/dashboard/group',          label: 'Dashboard',    icon: '🏠' },
+    { href: '/dashboard/member/savings', label: 'Group Savings', icon: '💰' },
+    { href: '/dashboard/member/loans',   label: 'Loans',         icon: '🏦' },
+    { href: '/reports',                  label: 'Reports',       icon: '📄' },
+    { href: '/settings',                 label: 'Settings',      icon: '⚙️'  },
   ],
   LOAN_OFFICER: [
-    { href: '/dashboard/loan-officer', label: 'Dashboard',  icon: '🏠' },
-    { href: '/loans',                  label: 'Loan Queue', icon: '📋' },
-    { href: '/reports',                label: 'Reports',    icon: '📄' },
+    { href: '/dashboard/loan-officer',   label: 'Dashboard',    icon: '🏠' },
+    { href: '/dashboard/member/loans',   label: 'Loan Queue',   icon: '📋' },
+    { href: '/reports',                  label: 'Reports',       icon: '📄' },
   ],
   ADMIN: [
-    { href: '/dashboard/admin', label: 'Dashboard',    icon: '🏠' },
-    { href: '/savings',         label: 'Savings',       icon: '💰' },
-    { href: '/loans',           label: 'Loans',         icon: '🏦' },
-    { href: '/reports',         label: 'Reports',       icon: '📄' },
-    { href: '/settings',        label: 'System Config', icon: '⚙️'  },
+    { href: '/dashboard/admin',          label: 'Dashboard',    icon: '🏠' },
+    { href: '/dashboard/member/savings', label: 'Savings',       icon: '💰' },
+    { href: '/dashboard/member/loans',   label: 'Loans',         icon: '🏦' },
+    { href: '/reports',                  label: 'Reports',       icon: '📄' },
+    { href: '/settings',                 label: 'System Config', icon: '⚙️'  },
   ],
 };
 

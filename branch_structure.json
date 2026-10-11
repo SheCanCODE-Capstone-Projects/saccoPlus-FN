@@ -1,0 +1,33 @@
+{
+  "default_branch": "main",
+  "branches": [
+    "frontend-registration",
+    "login",
+    "main",
+    "my-backup-work",
+    "my-new-branch",
+    "olu-dashboard",
+    "origin",
+    "withdraw"
+  ],
+  "parent": {
+    "frontend-registration": "main",
+    "login": "main",
+    "main": null,
+    "my-backup-work": "main",
+    "my-new-branch": "main",
+    "olu-dashboard": "main",
+    "origin": "main",
+    "withdraw": "main"
+  },
+  "order": [
+    "main",
+    "frontend-registration",
+    "login",
+    "my-backup-work",
+    "my-new-branch",
+    "olu-dashboard",
+    "origin",
+    "withdraw"
+  ]
+}

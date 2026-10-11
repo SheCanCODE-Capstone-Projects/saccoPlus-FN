@@ -15,17 +15,12 @@ yarn-error.log*
 pnpm-debug.log*
 
 # Environment variables (VERY IMPORTANT)
-.env
-.env.local
-.env.development
-.env.production
 
 # OS files
 .DS_Store
 Thumbs.db
 
 # IDE / Editor
-.vscode/
 .idea/
 
 # TypeScript
@@ -38,6 +33,4 @@ coverage/
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
-branch_structure.json
-temp_auto_push.bat
-temp_interactive_push.bat
+config.bat
